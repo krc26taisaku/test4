@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f3f5f8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>検定対策 Ver2.0</title>
+  <link rel="stylesheet" href="style.css?v=22">
+</head>
+<body>
+  <div id="drawerBackdrop" class="drawer-backdrop"></div>
+
+  <aside id="drawer" class="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <div>
+        <div class="drawer-eyebrow">検定対策</div>
+        <h2>メニュー</h2>
+      </div>
+      <button id="closeDrawerButton" class="icon-button" aria-label="メニューを閉じる">×</button>
+    </div>
+
+    <nav class="drawer-nav">
+      <button data-route="home">🏠 モード選択</button>
+      <button data-route="word">📖 単語</button>
+      <button data-route="calculation">🧮 計算</button>
+      <button data-route="exam">📝 試験</button>
+      <button data-route="wordList">📚 単語一覧</button>
+      <button data-route="history">📊 学習履歴</button>
+      <button data-route="ranking">🔥 苦手ランキング</button>
+      <button data-route="examDate">📅 試験日の設定</button>
+      <button data-route="settings">⚙️ 設定</button>
+    </nav>
+  </aside>
+
+  <main class="app-shell">
+    <section id="page-home" class="page">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">基本情報 科目A免除</div>
+          <h1>検定対策</h1>
+        </div>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+
+      <section class="hero-card">
+        <div>
+          <span class="status-badge">Ver2.0</span>
+          <h2>学習モードを選択</h2>
+          <p>単語・計算・試験を、それぞれ専用画面で学習できます。</p>
+        </div>
+      </section>
+
+      <section class="mode-grid">
+        <button class="mode-card" data-route="word">
+          <span class="mode-icon">📖</span>
+          <span class="mode-copy">
+            <strong>単語</strong>
+            <small>四択・復習・単語一覧・分析</small>
+          </span>
+          <span class="chevron">›</span>
+        </button>
+
+        <button class="mode-card muted" data-route="calculation">
+          <span class="mode-icon">🧮</span>
+          <span class="mode-copy">
+            <strong>計算</strong>
+            <small>現在メンテナンス中</small>
+          </span>
+          <span class="chevron">›</span>
+        </button>
+
+        <button class="mode-card" data-route="exam">
+          <span class="mode-icon">📝</span>
+          <span class="mode-copy">
+            <strong>試験</strong>
+            <small>単語テストを設定して挑戦</small>
+          </span>
+          <span class="chevron">›</span>
+        </button>
+      </section>
+    </section>
+
+    <section id="page-word" class="page hidden">
+      <header class="topbar">
+        <button class="icon-button" data-route="home" aria-label="戻る">←</button>
+        <h1 class="topbar-title">単語</h1>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+
+      <section id="examCountdownCard" class="exam-countdown-card hidden">
+        <div>
+          <div class="exam-countdown-label">試験まで</div>
+          <div id="examCountdownDays" class="exam-countdown-days"></div>
+          <div id="examCountdownDate" class="exam-countdown-date"></div>
+        </div>
+        <button class="secondary-button compact-secondary" data-route="examDate">試験日を変更</button>
+      </section>
+
+      <section id="resumeCard" class="card hidden">
+        <div class="section-label">前回の続き</div>
+        <h2 id="resumeTitle">続きから勉強</h2>
+        <p id="resumeDetail" class="muted-text"></p>
+        <div class="two-buttons">
+          <button id="resumeButton" class="primary-button">続きから</button>
+          <button id="restartButton" class="secondary-button no-margin">最初から</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-label">全分野</div>
+        <button id="startAllButton" class="list-button compact-button"><span>全分野ランダム問題</span><strong id="allRate">0%</strong></button>
+      </section>
+
+      <section class="card">
+        <div class="section-label">分野別ランダム問題</div>
+        <button class="list-button compact-button" data-start-category="ストラテジ系"><span>▶︎ ストラテジ系</span><strong id="strategyRate">0%</strong></button>
+        <button class="list-button compact-button" data-start-category="マネジメント系"><span>▶︎ マネジメント系</span><strong id="managementRate">0%</strong></button>
+        <button class="list-button compact-button" data-start-category="テクノロジ系"><span>▶︎ テクノロジ系</span><strong id="technologyRate">0%</strong></button>
+      </section>
+
+      <section class="card">
+        <div class="section-label">復習</div>
+        <button id="startWrongButton" class="list-button compact-button"><span>間違えた問題</span><strong id="wrongCount">0問</strong></button>
+        <button id="startFavoriteButton" class="list-button compact-button"><span>★ お気に入り問題</span><strong id="favoriteCount">0問</strong></button>
+      </section>
+
+      <section class="menu-list">
+        <button class="list-button" data-route="wordList">単語一覧 <span>›</span></button>
+        <button class="list-button" data-route="history">学習履歴 <span>›</span></button>
+        <button class="list-button" data-route="ranking">苦手ランキング <span>›</span></button>
+      </section>
+    </section>
+
+    <section id="page-quiz" class="page hidden">
+      <header class="topbar quiz-topbar">
+        <button id="quizBackButton" class="icon-button" aria-label="単語ホームへ戻る">←</button>
+        <div class="quiz-heading">
+          <span id="quizCategory" class="pill"></span>
+          <span id="quizProgress" class="progress-text"></span>
+        </div>
+        <button id="favoriteButton" class="icon-button favorite-button" aria-label="お気に入り">☆</button>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+
+      <section class="card">
+        <div id="quizQuestion" class="question-text"></div>
+        <div id="questionStats" class="question-stats"></div>
+        <div id="choiceArea" class="choice-area"></div>
+        <div id="answerResult" class="answer-result hidden"></div>
+        <button id="nextQuestionButton" class="primary-button hidden">次の問題へ</button>
+      </section>
+
+      <section class="card">
+        <div class="quiz-actions">
+          <button id="noteToggleButton" class="secondary-button no-margin">📝 この問題のメモ</button>
+        </div>
+        <div id="notePanel" class="note-panel hidden">
+          <textarea id="noteInput" class="note-input" rows="4" placeholder="覚え方や注意点を自由に記録"></textarea>
+          <button id="saveNoteButton" class="primary-button">メモを保存</button>
+          <p id="noteStatus" class="muted-text small-text"></p>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="stats-row">
+          <div><strong id="sessionAnswered">0</strong><span>今回の解答</span></div>
+          <div><strong id="sessionCorrect">0</strong><span>今回の正解</span></div>
+          <div><strong id="sessionRate">0%</strong><span>正答率</span></div>
+        </div>
+      </section>
+    </section>
+
+    <section id="page-calculation" class="page hidden">
+      <header class="topbar">
+        <button class="icon-button" data-route="home" aria-label="戻る">←</button>
+        <h1 class="topbar-title">計算</h1>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+
+      <section class="maintenance-card">
+        <div class="maintenance-icon">🚧</div>
+        <h2>メンテナンス中</h2>
+        <p>計算問題は現在作成中です。進数変換、CPU、稼働率、アローダイアグラムなどを順次追加予定です。</p>
+        <button class="primary-button" data-route="home">モード選択へ戻る</button>
+      </section>
+    </section>
+
+    <section id="page-exam" class="page hidden">
+      <header class="topbar">
+        <button class="icon-button" data-route="home" aria-label="戻る">←</button>
+        <h1 class="topbar-title">試験</h1>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+
+      <section class="card">
+        <div class="section-label">試験モード</div>
+        <h2>テストを選択</h2>
+      </section>
+
+      <section class="mode-grid">
+        <button class="mode-card" data-placeholder="単語テスト">
+          <span class="mode-icon">📖</span>
+          <span class="mode-copy">
+            <strong>単語テスト</strong>
+            <small>出題数・範囲・採点方法を設定</small>
+          </span>
+          <span class="chevron">›</span>
+        </button>
+
+        <button class="mode-card muted" data-route="examMaintenance">
+          <span class="mode-icon">🧮</span>
+          <span class="mode-copy">
+            <strong>計算テスト</strong>
+            <small>メンテナンス中</small>
+          </span>
+          <span class="chevron">›</span>
+        </button>
+
+        <button class="mode-card muted" data-route="examMaintenance">
+          <span class="mode-icon">📚</span>
+          <span class="mode-copy">
+            <strong>総合テスト</strong>
+            <small>メンテナンス中</small>
+          </span>
+          <span class="chevron">›</span>
+        </button>
+      </section>
+    </section>
+
+    <section id="page-examMaintenance" class="page hidden">
+      <header class="topbar">
+        <button class="icon-button" data-route="exam" aria-label="戻る">←</button>
+        <h1 class="topbar-title">試験</h1>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+
+      <section class="maintenance-card">
+        <div class="maintenance-icon">🚧</div>
+        <h2>メンテナンス中</h2>
+        <p>計算テストと総合テストは、計算問題の追加後に利用できるようになります。</p>
+        <button class="primary-button" data-route="exam">試験メニューへ戻る</button>
+      </section>
+    </section>
+
+    
+    <section id="page-wordList" class="page hidden">
+      <header class="topbar">
+        <button class="icon-button" data-route="word" aria-label="戻る">←</button>
+        <h1 class="topbar-title">単語一覧</h1>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+
+      <section class="card">
+        <input id="wordSearchInput" class="field-input" type="search" placeholder="単語・意味を検索">
+        <div class="filter-row">
+          <button class="filter-button active" data-word-filter="all">全分野</button>
+          <button class="filter-button" data-word-filter="ストラテジ系">ストラテジ</button>
+          <button class="filter-button" data-word-filter="マネジメント系">マネジメント</button>
+          <button class="filter-button" data-word-filter="テクノロジ系">テクノロジ</button>
+        </div>
+        <div class="filter-row">
+          <button class="filter-button active" data-word-sort="kana">あいうえお順</button>
+          <button class="filter-button" data-word-sort="alpha">ABC順</button>
+          <button class="filter-button" data-word-sort="favorite">お気に入り</button>
+        </div>
+        <div id="wordListSummary" class="muted-text"></div>
+      </section>
+
+      <section id="wordListContainer"></section>
+    </section>
+
+    
+    <section id="page-history" class="page hidden">
+      <header class="topbar">
+        <button class="icon-button" data-route="word" aria-label="戻る">←</button>
+        <h1 class="topbar-title">学習履歴</h1>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+
+      <section id="todayHistoryCard" class="card"></section>
+      <section id="historySummaryGrid" class="history-grid"></section>
+
+      <section class="card">
+        <div class="section-label">日別履歴</div>
+        <div id="dailyHistoryList"></div>
+      </section>
+    </section>
+
+    
+    <section id="page-ranking" class="page hidden">
+      <header class="topbar">
+        <button class="icon-button" data-route="word" aria-label="戻る">←</button>
+        <h1 class="topbar-title">苦手ランキング</h1>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+
+      <section class="card">
+        <div class="filter-row">
+          <button class="filter-button active" data-ranking-sort="rate">正答率が低い順</button>
+          <button class="filter-button" data-ranking-sort="wrong">間違い回数順</button>
+        </div>
+        <div class="filter-row">
+          <button class="filter-button active" data-ranking-filter="all">全分野</button>
+          <button class="filter-button" data-ranking-filter="ストラテジ系">ストラテジ</button>
+          <button class="filter-button" data-ranking-filter="マネジメント系">マネジメント</button>
+          <button class="filter-button" data-ranking-filter="テクノロジ系">テクノロジ</button>
+        </div>
+      </section>
+
+      <section id="rankingList"></section>
+    </section>
+
+    <section id="page-examDate"  class="page hidden placeholder-page">
+      <header class="topbar">
+        <button class="icon-button" data-route="home" aria-label="戻る">←</button>
+        <h1 class="topbar-title">試験日の設定</h1>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+      <section class="card">
+        <label class="field-label" for="examDateInput">試験日</label>
+        <input id="examDateInput" class="field-input" type="date">
+        <button id="saveExamDateButton" class="primary-button">保存</button>
+        <button id="deleteExamDateButton" class="secondary-button">削除</button>
+        <p id="examDateStatus" class="muted-text"></p>
+      </section>
+    </section>
+
+    <section id="page-settings" class="page hidden placeholder-page">
+      <header class="topbar">
+        <button class="icon-button" data-route="home" aria-label="戻る">←</button>
+        <h1 class="topbar-title">設定</h1>
+        <button class="icon-button open-drawer" aria-label="メニューを開く">☰</button>
+      </header>
+      <section class="card"><h2>設定</h2><p class="muted-text">間違えた理由の記録、表示方法、ダークモードなどを今後追加します。</p></section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="words.js?v=22"></script>
+  <script src="calculations.js?v=22"></script>
+  <script src="storage.js?v=22"></script>
+  <script src="word.js?v=22"></script>
+  <script src="quiz.js?v=22"></script>
+  <script src="wordlist.js?v=22"></script>
+  <script src="history.js?v=22"></script>
+  <script src="ranking.js?v=22"></script>
+  <script src="router.js?v=22"></script>
+  <script src="drawer.js?v=22"></script>
+  <script src="app.js?v=22"></script>
+</body>
+</html>
